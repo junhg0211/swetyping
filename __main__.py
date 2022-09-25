@@ -1,4 +1,5 @@
 import tkinter
+from time import time
 from tkinter import ttk, filedialog, messagebox
 
 from util import get_language, get_command_key, get_length, strawberrify
@@ -123,6 +124,7 @@ class MainWindow:
         self.wrong_typed_count = 0
         self.this_line_typed_count = 0
         self.this_line_wrong_typed_count = 0
+        self.record_start_timestamp = 0
 
     def typed(self, *_):
         if self.lines is None:
@@ -145,7 +147,9 @@ class MainWindow:
                 except ValueError:
                     self.this_line_wrong_typed_count += 1
 
-        self.now_types.configure(text=str(self.typed_count + self.this_line_typed_count))
+        self.now_types.configure(text=str(until_typed_count := self.typed_count + self.this_line_typed_count))
+        if not self.record_start_timestamp and until_typed_count:
+            self.record_start_timestamp = time()
 
     def start(self):
         self.tk.mainloop()
@@ -164,8 +168,13 @@ class MainWindow:
         self.end_types.configure(text=str(end_types_count))
 
     def end_game(self):
+        end_timestamp = time()
+        delta = end_timestamp - self.record_start_timestamp
+
         messagebox.showinfo(get_language('notification.end.title'), get_language('notification.end.message').format(
-            self.typed_count, 0, 0
+            format(self.typed_count / delta * 60, '.2f'),
+            format(100 * (1 - self.wrong_typed_count / self.typed_count), '.2f'),
+            format(delta, '.2f')
         ))
 
     def update_lines(self):
