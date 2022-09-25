@@ -1,7 +1,7 @@
 import tkinter
 from tkinter import ttk, filedialog, messagebox
 
-from util import get_language, get_command_key
+from util import get_language, get_command_key, get_length, strawberrify
 
 PADDING = 12
 
@@ -136,11 +136,14 @@ class MainWindow:
 
         self.current_line_typed.tag_remove('red', '1.0', tkinter.END)
         self.this_line_wrong_typed_count = 0
-        self.this_line_typed_count = len(typed)
-        for i, letter in enumerate(typed):
+        self.this_line_typed_count = get_length(typed)
+        for i, letter in enumerate(typed):  # coloring the wrong types
             if i >= len(aim) or letter != aim[i]:
                 self.current_line_typed.tag_add('red', f'1.{i}', f'1.{i+1}')
-                self.this_line_wrong_typed_count += 1
+                try:
+                    self.this_line_wrong_typed_count += len(''.join(strawberrify(letter)))
+                except ValueError:
+                    self.this_line_wrong_typed_count += 1
 
         self.now_types.configure(text=str(self.typed_count + self.this_line_typed_count))
 
@@ -157,7 +160,7 @@ class MainWindow:
             self.current_line_index = 0
             self.update_lines()
 
-        end_types_count = sum(map(len, self.lines))
+        end_types_count = sum(map(get_length, self.lines))
         self.end_types.configure(text=str(end_types_count))
 
     def end_game(self):
@@ -189,7 +192,7 @@ class MainWindow:
             self.next_lines_elements[1][0].configure(text='')
 
     def return_line(self, _=None):
-        self.typed_count += self.this_line_typed_count
+        self.typed_count += max(self.this_line_typed_count, get_length(self.lines[self.current_line_index]))
         self.wrong_typed_count += self.this_line_wrong_typed_count
 
         if self.current_line_index < len(self.lines) - 1:
