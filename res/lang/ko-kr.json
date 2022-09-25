@@ -1,0 +1,22 @@
+{
+  "main": {
+    "title": "Swe Typing",
+    "menubar": {
+      "file": {
+        "label": "파일",
+        "open": "열기",
+        "quit": "종료"
+      }
+    },
+    "status_bar": {
+      "now_types": "현재 타수",
+      "end_types": "종료 타수",
+      "types_unit": "타",
+      "types_per_minute": "분당 타수",
+      "types_per_minute_unit": "타/분",
+      "progress": "진행률",
+      "progress_time": "진행 시간",
+      "progress_time_unit": "초"
+    }
+  }
+}
