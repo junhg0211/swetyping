@@ -23,7 +23,7 @@ def set_language(lang: Language):
 
 def get_language(path: str):
     """
-    gets a langauge string from a file.
+    gets a langauge string from a file
     :param path: a file path separated by .
     :return: the language string
     """
