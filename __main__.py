@@ -177,8 +177,6 @@ class MainWindow:
         self.current_line.configure(state=tkinter.NORMAL)
         self.current_line.delete("1.0", tkinter.END)
         self.current_line.insert("1.0", self.lines[self.current_line_index])
-        # self.current_line.delete(0, tkinter.END)
-        # self.current_line.insert(0, self.lines[self.current_line_index])
         self.current_line.configure(state=tkinter.DISABLED)
 
         if (line_index := self.current_line_index + 1) < len(self.lines):
