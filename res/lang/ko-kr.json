@@ -18,5 +18,11 @@
       "progress_time": "진행 시간",
       "progress_time_unit": "초"
     }
+  },
+  "notification": {
+    "end": {
+      "title": "타자 연습 종료",
+      "message": "타자 연습을 종료합니다.\n타수:\t{0} 타/분\n정확도:\t{1} %\n시간:\t{2} 초"
+    }
   }
 }

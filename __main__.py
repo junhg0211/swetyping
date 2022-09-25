@@ -1,5 +1,5 @@
 import tkinter
-from tkinter import ttk, filedialog
+from tkinter import ttk, filedialog, messagebox
 
 from util import get_language, get_command_key
 
@@ -160,6 +160,11 @@ class MainWindow:
         end_types_count = sum(map(len, self.lines))
         self.end_types.configure(text=str(end_types_count))
 
+    def end_game(self):
+        messagebox.showinfo(get_language('notification.end.title'), get_language('notification.end.message').format(
+            self.typed_count, 0, 0
+        ))
+
     def update_lines(self):
         if (line_index := self.current_line_index - 1) >= 0:
             self.previous_line.configure(text=self.lines[line_index])
@@ -183,15 +188,17 @@ class MainWindow:
         else:
             self.next_lines_elements[1][0].configure(text='')
 
+    def return_line(self, _=None):
         self.typed_count += self.this_line_typed_count
         self.wrong_typed_count += self.this_line_wrong_typed_count
 
-    def return_line(self, _=None):
         if self.current_line_index < len(self.lines) - 1:
             self.current_line_index += 1
             self.update_lines()
             self.previous_line_typed.configure(text=self.current_line_typed.get("1.0", tkinter.END))
             self.current_line_typed.delete("1.0", tkinter.END)
+        else:
+            self.end_game()
 
 
 if __name__ == '__main__':
