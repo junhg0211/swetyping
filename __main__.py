@@ -119,7 +119,7 @@ class MainWindow:
         self.current_line_index = 0
         self.tk.bind_all('<Return>', self.return_line)
 
-    def typed(self, *args):
+    def typed(self, *_):
         if self.lines is None:
             return
 
