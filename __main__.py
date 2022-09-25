@@ -1,5 +1,4 @@
 import tkinter
-from difflib import Differ
 from tkinter import ttk, filedialog
 
 from util import get_language, get_command_key
@@ -78,7 +77,6 @@ class MainWindow:
         main_frame.pack(padx=12, pady=12, side=tkinter.BOTTOM, fill=tkinter.BOTH, expand=True)
 
         # === type handler
-        self.differ = Differ()
         self.tk.bind_all('<KeyPress>', self.typed)
 
         # === menubar
@@ -119,21 +117,33 @@ class MainWindow:
         self.current_line_index = 0
         self.tk.bind_all('<Return>', self.return_line)
 
+        # record
+        self.all_type_count = 0
+        self.typed_count = 0
+        self.wrong_typed_count = 0
+        self.this_line_typed_count = 0
+        self.this_line_wrong_typed_count = 0
+
     def typed(self, *_):
         if self.lines is None:
             return
 
-        typed = self.current_line_typed.get("1.0", tkinter.END)
+        typed = self.current_line_typed.get("1.0", tkinter.END)[:-1]
         aim = self.lines[self.current_line_index]
-        if len(typed) - 2 == len(aim):
+        if len(typed) - 1 == len(aim):
             self.return_line()
+            return
 
         self.current_line_typed.tag_remove('red', '1.0', tkinter.END)
-        for line in self.differ.compare([typed], [aim[:len(typed)]]):
-            if line.startswith('?'):
-                for i, letter in enumerate(line[2:]):
-                    if letter == '^':
-                        self.current_line_typed.tag_add('red', f'1.{i}', f'1.{i+1}')
+        self.this_line_wrong_typed_count = 0
+        self.this_line_typed_count = len(typed)
+        for i, letter in enumerate(typed):
+            if i >= len(aim) or letter != aim[i]:
+                self.current_line_typed.tag_add('red', f'1.{i}', f'1.{i+1}')
+                self.this_line_wrong_typed_count += 1
+                print(self.this_line_wrong_typed_count, i, letter, repr(typed))
+
+        self.now_types.configure(text=str(self.typed_count + self.this_line_typed_count))
 
     def start(self):
         self.tk.mainloop()
@@ -147,6 +157,9 @@ class MainWindow:
                 self.lines = list(map(lambda x: x.strip(), file.readlines()))
             self.current_line_index = 0
             self.update_lines()
+
+        end_types_count = sum(map(len, self.lines))
+        self.end_types.configure(text=str(end_types_count))
 
     def update_lines(self):
         if (line_index := self.current_line_index - 1) >= 0:
@@ -170,6 +183,9 @@ class MainWindow:
             self.next_lines_elements[1][0].configure(text=self.lines[line_index])
         else:
             self.next_lines_elements[1][0].configure(text='')
+
+        self.typed_count += self.this_line_typed_count
+        self.wrong_typed_count += self.this_line_wrong_typed_count
 
     def return_line(self, _=None):
         if self.current_line_index < len(self.lines) - 1:
