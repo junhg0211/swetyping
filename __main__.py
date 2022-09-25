@@ -141,7 +141,6 @@ class MainWindow:
             if i >= len(aim) or letter != aim[i]:
                 self.current_line_typed.tag_add('red', f'1.{i}', f'1.{i+1}')
                 self.this_line_wrong_typed_count += 1
-                print(self.this_line_wrong_typed_count, i, letter, repr(typed))
 
         self.now_types.configure(text=str(self.typed_count + self.this_line_typed_count))
 
