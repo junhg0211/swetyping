@@ -151,12 +151,15 @@ class MainWindow:
         if not self.record_start_timestamp and until_typed_count:
             self.record_start_timestamp = time()
 
-        self.accuracy.configure(
-            text=format(100 * (1 - (self.wrong_typed_count + self.this_line_wrong_typed_count) / until_typed_count),
-                        '.2f'))
-
-        self.types_per_minute.configure(
-            text=format(until_typed_count / (time() - self.record_start_timestamp) * 60, '.2f'))
+        try:
+            self.types_per_minute.configure(
+                text=format(until_typed_count / (time() - self.record_start_timestamp) * 60, '.2f'))
+            self.accuracy.configure(
+                text=format(100 * (1 - (self.wrong_typed_count + self.this_line_wrong_typed_count) / until_typed_count),
+                            '.2f'))
+        except ZeroDivisionError:
+            self.types_per_minute.configure(text='-')
+            self.accuracy.configure(text='-')
 
         self.progress.configure(
             text=format(100 * ((self.current_line_index + (self.this_line_typed_count / get_length(aim)))
