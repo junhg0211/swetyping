@@ -17,10 +17,10 @@ class MainWindow:
         tkinter.Label(status_bar, text=get_language('main.status_bar.now_types')).grid(row=0, column=0)
         tkinter.Label(status_bar, text=get_language('main.status_bar.types_unit')).grid(row=0, column=2)
         # end types
-        tkinter.Label(status_bar, text=get_language('main.status_bar.end_types')).grid(row=1, column=0)
-        tkinter.Label(status_bar, text=get_language('main.status_bar.types_unit')).grid(row=1, column=2)
+        tkinter.Label(status_bar, text=get_language('main.status_bar.accuracy')).grid(row=1, column=0)
+        tkinter.Label(status_bar, text='%').grid(row=1, column=2)
         # types per minute
-        tkinter.Label(status_bar, text=get_language('main.status_bar.types_per_minute'))\
+        tkinter.Label(status_bar, text=get_language('main.status_bar.types_per_minute')) \
             .grid(row=0, column=4, sticky=tkinter.W)
         tkinter.Label(status_bar, text=get_language('main.status_bar.types_per_minute_unit')) \
             .grid(row=0, column=6, sticky=tkinter.W)
@@ -32,8 +32,8 @@ class MainWindow:
 
         self.now_types = tkinter.Label(status_bar, text='0')
         self.now_types.grid(row=0, column=1, sticky=tkinter.E)
-        self.end_types = tkinter.Label(status_bar, text='0')
-        self.end_types.grid(row=1, column=1, sticky=tkinter.E)
+        self.accuracy = tkinter.Label(status_bar, text='0')
+        self.accuracy.grid(row=1, column=1, sticky=tkinter.E)
         self.types_per_minute = tkinter.Label(status_bar, text='0')
         self.types_per_minute.grid(row=0, column=5, sticky=tkinter.E)
         self.progress = tkinter.Label(status_bar, text='0')
@@ -141,7 +141,7 @@ class MainWindow:
         self.this_line_typed_count = get_length(typed)
         for i, letter in enumerate(typed):  # coloring the wrong types
             if i >= len(aim) or letter != aim[i]:
-                self.current_line_typed.tag_add('red', f'1.{i}', f'1.{i+1}')
+                self.current_line_typed.tag_add('red', f'1.{i}', f'1.{i + 1}')
                 try:
                     self.this_line_wrong_typed_count += len(''.join(strawberrify(letter)))
                 except ValueError:
@@ -150,6 +150,17 @@ class MainWindow:
         self.now_types.configure(text=str(until_typed_count := self.typed_count + self.this_line_typed_count))
         if not self.record_start_timestamp and until_typed_count:
             self.record_start_timestamp = time()
+
+        self.accuracy.configure(
+            text=format(100 * (1 - (self.wrong_typed_count + self.this_line_wrong_typed_count) / until_typed_count),
+                        '.2f'))
+
+        self.types_per_minute.configure(
+            text=format(until_typed_count / (time() - self.record_start_timestamp) * 60, '.2f'))
+
+        self.progress.configure(
+            text=format(100 * ((self.current_line_index + (self.this_line_typed_count / get_length(aim)))
+                               / len(self.lines)), '.2f'))
 
     def start(self):
         self.tk.mainloop()
@@ -163,9 +174,6 @@ class MainWindow:
                 self.lines = list(map(lambda x: x.strip(), file.readlines()))
             self.current_line_index = 0
             self.update_lines()
-
-        end_types_count = sum(map(get_length, self.lines))
-        self.end_types.configure(text=str(end_types_count))
 
     def end_game(self):
         end_timestamp = time()

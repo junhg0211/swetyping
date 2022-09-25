@@ -10,7 +10,7 @@
     },
     "status_bar": {
       "now_types": "현재 타수",
-      "end_types": "종료 타수",
+      "accuracy": "정확도",
       "types_unit": "타",
       "types_per_minute": "분당 타수",
       "types_per_minute_unit": "타/분",
