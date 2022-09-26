@@ -211,7 +211,7 @@ class MainWindow:
             format(speed, '.2f'),
             format(100 * accuracy, '.2f'),
             format(delta, '.2f'),
-            format(speed * accuracy**2, '.2f')
+            format(speed * accuracy ** 2, '.2f')
         ))
 
     def update_lines(self):
@@ -240,8 +240,8 @@ class MainWindow:
             return
 
         self.typed_count += max(self.this_line_typed_count, get_length(self.lines[self.current_line_index]))
-        self.wrong_typed_count += self.this_line_wrong_typed_count + abs(self.this_line_typed_count
-            - get_length(self.lines[self.current_line_index]))
+        self.wrong_typed_count += self.this_line_wrong_typed_count + abs(
+            self.this_line_typed_count - get_length(self.lines[self.current_line_index]))
 
         self.this_line_typed_count = 0
 
