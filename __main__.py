@@ -126,6 +126,29 @@ class MainWindow:
         self.this_line_wrong_typed_count = 0
         self.record_start_timestamp = 0
 
+    def reset(self):
+        self.now_types.config(text='0')
+        self.accuracy.config(text='0')
+        self.types_per_minute.config(text='0')
+        self.progress.config(text='0')
+        self.previous_line.config(text='')
+        self.previous_line_typed.config(text='')
+        self.current_line.config(state=tkinter.NORMAL)
+        self.current_line.delete('1.0', tkinter.END)
+        self.current_line.config(state=tkinter.DISABLED)
+        self.current_line_typed.delete('1.0', tkinter.END)
+        for next_line, next_line_typed in self.next_lines_elements:
+            next_line.config(text='')
+            next_line_typed.config(text='')
+        self.lines = None
+        self.current_line_index = 0
+        self.all_type_count = 0
+        self.typed_count = 0
+        self.wrong_typed_count = 0
+        self.this_line_typed_count = 0
+        self.this_line_wrong_typed_count = 0
+        self.record_start_timestamp = 0
+
     def typed(self, *_):
         if self.lines is None:
             return
@@ -169,6 +192,8 @@ class MainWindow:
         self.tk.mainloop()
 
     def open_file(self):
+        self.reset()
+
         filename = filedialog.askopenfilename()
         self.previous_line.config(text=filename)
 
