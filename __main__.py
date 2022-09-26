@@ -1,6 +1,9 @@
 import tkinter
+from os import path
 from time import time
 from tkinter import ttk, filedialog, messagebox
+
+from PIL import Image, ImageTk
 
 from util import get_language, get_command_key, get_length, strawberrify
 
@@ -10,6 +13,12 @@ PADDING = 12
 class MainWindow:
     def __init__(self):
         self.tk = tkinter.Tk()
+
+        # === icon image
+        icon = Image.open(path.join('res', 'image', 'logo.png'))
+        photo = ImageTk.PhotoImage(icon)
+        # noinspection PyTypeChecker
+        self.tk.iconphoto(False, photo)
 
         # === status bar
         status_bar = tkinter.Frame(self.tk)
