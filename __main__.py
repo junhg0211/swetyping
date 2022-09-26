@@ -27,8 +27,6 @@ class MainWindow:
         # progress
         tkinter.Label(status_bar, text=get_language('main.status_bar.progress')).grid(row=1, column=4, sticky=tkinter.W)
         tkinter.Label(status_bar, text='%').grid(row=1, column=6, sticky=tkinter.W)
-        # progress time
-        tkinter.Label(status_bar, text=get_language('main.status_bar.progress_time')).grid(row=2, column=0)
 
         self.now_types = tkinter.Label(status_bar, text='0')
         self.now_types.grid(row=0, column=1, sticky=tkinter.E)
