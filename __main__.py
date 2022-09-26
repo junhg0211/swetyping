@@ -133,6 +133,9 @@ class MainWindow:
         self.this_line_wrong_typed_count = 0
         self.record_start_timestamp = 0
 
+        # prevent recording
+        self.record_not_shown = True
+
     def reset(self):
         self.now_types.config(text='0')
         self.accuracy.config(text='0')
@@ -155,6 +158,7 @@ class MainWindow:
         self.this_line_typed_count = 0
         self.this_line_wrong_typed_count = 0
         self.record_start_timestamp = 0
+        self.record_not_shown = True
 
     def typed(self, *_):
         if self.lines is None:
@@ -214,14 +218,16 @@ class MainWindow:
         end_timestamp = time()
         delta = end_timestamp - self.record_start_timestamp
 
-        speed = self.typed_count / delta * 60
-        accuracy = 1 - self.wrong_typed_count / self.typed_count
-        messagebox.showinfo(get_language('notification.end.title'), get_language('notification.end.message').format(
-            format(speed, '.2f'),
-            format(100 * accuracy, '.2f'),
-            format(delta, '.2f'),
-            format(speed * accuracy ** 2, '.2f')
-        ))
+        if self.record_not_shown:
+            speed = self.typed_count / delta * 60
+            accuracy = 1 - self.wrong_typed_count / self.typed_count
+            messagebox.showinfo(get_language('notification.end.title'), get_language('notification.end.message').format(
+                format(speed, '.2f'),
+                format(100 * accuracy, '.2f'),
+                format(delta, '.2f'),
+                format(speed * accuracy ** 2, '.2f')
+            ))
+            self.record_not_shown = False
 
     def update_lines(self):
         if (line_index := self.current_line_index - 1) >= 0:
