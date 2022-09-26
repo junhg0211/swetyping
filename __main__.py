@@ -240,8 +240,10 @@ class MainWindow:
             return
 
         self.typed_count += max(self.this_line_typed_count, get_length(self.lines[self.current_line_index]))
-        self.wrong_typed_count += self.this_line_wrong_typed_count + abs(self.this_line_typed_count - get_length(
-            self.lines[self.current_line_index]))
+        self.wrong_typed_count += self.this_line_wrong_typed_count + abs(self.this_line_typed_count
+            - get_length(self.lines[self.current_line_index]))
+
+        self.this_line_typed_count = 0
 
         if self.current_line_index < len(self.lines) - 1:
             self.current_line_index += 1
