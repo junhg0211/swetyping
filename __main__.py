@@ -205,10 +205,13 @@ class MainWindow:
         end_timestamp = time()
         delta = end_timestamp - self.record_start_timestamp
 
+        speed = self.typed_count / delta * 60
+        accuracy = 1 - self.wrong_typed_count / self.typed_count
         messagebox.showinfo(get_language('notification.end.title'), get_language('notification.end.message').format(
-            format(self.typed_count / delta * 60, '.2f'),
-            format(100 * (1 - self.wrong_typed_count / self.typed_count), '.2f'),
-            format(delta, '.2f')
+            format(speed, '.2f'),
+            format(100 * accuracy, '.2f'),
+            format(delta, '.2f'),
+            format(speed * accuracy**2, '.2f')
         ))
 
     def update_lines(self):
@@ -233,8 +236,12 @@ class MainWindow:
             self.next_lines_elements[1][0].configure(text='')
 
     def return_line(self, _=None):
+        if not self.lines:
+            return
+
         self.typed_count += max(self.this_line_typed_count, get_length(self.lines[self.current_line_index]))
-        self.wrong_typed_count += self.this_line_wrong_typed_count
+        self.wrong_typed_count += self.this_line_wrong_typed_count + abs(self.this_line_typed_count - get_length(
+            self.lines[self.current_line_index]))
 
         if self.current_line_index < len(self.lines) - 1:
             self.current_line_index += 1
