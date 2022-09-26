@@ -178,13 +178,13 @@ class MainWindow:
             self.accuracy.configure(
                 text=format(100 * (1 - (self.wrong_typed_count + self.this_line_wrong_typed_count) / until_typed_count),
                             '.2f'))
+            self.progress.configure(
+                text=format(100 * ((self.current_line_index + (self.this_line_typed_count / get_length(aim)))
+                                   / len(self.lines)), '.2f'))
         except ZeroDivisionError:
             self.types_per_minute.configure(text='-')
             self.accuracy.configure(text='-')
-
-        self.progress.configure(
-            text=format(100 * ((self.current_line_index + (self.this_line_typed_count / get_length(aim)))
-                               / len(self.lines)), '.2f'))
+            self.progress.configure(text='0')
 
     def start(self):
         self.tk.mainloop()
